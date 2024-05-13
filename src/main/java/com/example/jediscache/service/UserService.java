@@ -5,11 +5,14 @@ import com.example.jediscache.domain.entity.User;
 import com.example.jediscache.domain.repository.RedisHashUserRepository;
 import com.example.jediscache.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+
+import static com.example.jediscache.config.CacheConfig.CACHE1;
 
 @Service
 @RequiredArgsConstructor
@@ -57,4 +60,11 @@ public class UserService {
 //        objectRedisTemplate.opsForValue().set(key, user, Duration.ofSeconds(30));
 //        return user;
     }
+    @Cacheable(cacheNames = CACHE1, key = "'user:' + #id")
+    public User getUser3(final Long id) {
+        return userRepository.findById(id).orElseThrow();
+    }
+
+    
+    
 }
